@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "289026179";
+    const serviceWorkerVersion = "985466906";
 
 
   </script>
@@ -547,8 +547,7 @@
     };
 
     const getInstallSheetTemplate = () => {
-      // const key = `${getPlatform()}-${getBrowser()}`;
-      const key = `windows-firefox`;
+      const key = `${getPlatform()}-${getBrowser()}`;
 
       return templates[key];
     }
@@ -567,11 +566,12 @@
     let deferredPrompt;
 
     window.addEventListener("beforeinstallprompt", (e) => {
+      // e.preventDefault();
+
       deferredPrompt = e;
     });
 
-    // const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
-    const supportsInstallPrompt = false;
+    const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
     if (!supportsInstallPrompt) {
       const template = getInstallSheetTemplate();
 
@@ -600,12 +600,7 @@
       scrollDiv.scrollTo({ left: curPos, behavior: 'smooth' });
     });
 
-    function promptInstall() {
-      // deferredPrompt.prompt();
-
-      console.log("prompting install: supportsInstallPrompt: ", supportsInstallPrompt);
-
-      deferredPrompt = null;  // REMOVE THIS
+    function promptInstall() {      
       if (deferredPrompt) {
         console.log("window.deferredPrompt", window.deferredPrompt);
         //window.deferredPrompt.prompt();
