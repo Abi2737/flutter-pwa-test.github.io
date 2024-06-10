@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "539836887";
+    const serviceWorkerVersion = "857107186";
 
 
   </script>
@@ -566,7 +566,7 @@
     let deferredPrompt;
 
     window.addEventListener("beforeinstallprompt", (e) => {
-      // e.preventDefault();
+      e.preventDefault();
 
       deferredPrompt = e;
     });
