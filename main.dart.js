@@ -58032,7 +58032,8 @@ A.Cr.prototype={}
 A.nP.prototype={
 D(){return"Variant."+this.b}}
 A.a5b.prototype={
-$0(){A.m7().$1("APP INSTALLED!")},
+$0(){A.m7().$1("APP INSTALLED!")
+window.location.reload()},
 $S:40}
 A.Av.prototype={
 O(a){var s=A.abZ(null,A.aic(B.O,B.Cn),!0)
