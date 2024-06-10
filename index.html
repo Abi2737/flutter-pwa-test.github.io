@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "857107186";
+    const serviceWorkerVersion = "3122978634";
 
 
   </script>
@@ -566,7 +566,7 @@
     let deferredPrompt;
 
     window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
+      // e.preventDefault();
 
       deferredPrompt = e;
     });
@@ -602,9 +602,13 @@
 
     function promptInstall() {      
       if (deferredPrompt) {
-        console.log("window.deferredPrompt", window.deferredPrompt);
+        console.log("deferredPrompt true: ", deferredPrompt);
         //window.deferredPrompt.prompt();
         deferredPrompt.prompt();
+      }
+      else if(window.deferredPrompt) {
+        console.log("on window.deferredPrompt");
+        window.deferredPrompt.prompt();
       }
       else if (!supportsInstallPrompt) {
         console.log("on !supportsInstallPrompt");
