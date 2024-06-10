@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "985466906";
+    const serviceWorkerVersion = "539836887";
 
 
   </script>
@@ -624,7 +624,9 @@
     // Track how PWA was launched (either from browser or as PWA)
     function getLaunchMode() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      if (deferredPrompt) hasPrompt();
+      //if (deferredPrompt) hasPrompt();
+      hasPrompt();
+
       if (document.referrer.startsWith('android-app://')) {
         appLaunchedAsTWA();
       } else if (navigator.standalone || isStandalone) {
