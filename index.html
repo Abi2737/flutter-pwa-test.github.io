@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--
+        If you are serving your web app in a path other than the root, change the
+        href value below to reflect the base path you are serving from.
+
+        The path provided below has to start and end with a slash "/" in order for
+        it to work correctly.
+
+        For more details:
+        * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+        This is a placeholder for base href that will be replaced by the value of
+        the `--base-href` argument provided to `flutter build`.
+      -->
+  <!--  <base href="/">-->
+  <base href="./">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Test flutter app as a pwa app.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="pwa_flutter">
+  <link rel="apple-touch-icon" href="./icons/icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./icons/icon.png" />
+
+  <title>pwa_flutter</title>
+  <link rel="manifest" href="./manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = "2422907569";
+
+
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="./flutter.js" defer></script>
+
+  <style>
+    dialog {
+      border: none;
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .24), 0 -2px 0 #eeeeee;
+    }
+
+    #install-dialog,
+    #sensor-dialog,
+    #geolocation-dialog {
+      box-sizing: border-box;
+      width: 80%;
+      height: 80%;
+      padding-top: 4px;
+      background-color: #e5e5e5;
+      border-radius: 10px;
+    }
+
+    #install-dialog {
+      transform: translateY(100%);
+      transition: transform .3s ease-out;
+      box-shadow: none;
+      width: 100vw;
+      max-width: 100vw;
+      height: 75%;
+      margin: 0;
+      top: auto;
+      border-radius: 10px 10px 0 0;
+    }
+
+    #install-dialog[opened] {
+      transform: translateY(0%);
+    }
+
+    @media (min-width: 1024px) {
+      #install-dialog {
+        margin: 0 auto;
+        top: 5%;
+        transform: translateY(-10%);
+        opacity: 0;
+        transition: transform .3s ease-out, opacity .3s ease-out;
+      }
+
+      #install-dialog[opened] {
+        opacity: 1;
+      }
+    }
+
+    #install-dialog header img {
+      width: 60px;
+    }
+
+    #install-dialog header {
+      padding-block: .5rem;
+    }
+
+    #install-dialog header div.heading {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+      padding-inline: 1rem;
+    }
+
+    #install-dialog header span:first-child {
+      font-weight: bold;
+      line-height: 26px;
+    }
+
+    #install-dialog header span:last-child {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    #install-dialog header div.close {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      height: 100%;
+    }
+
+    #install-dialog button img {
+      width: 18px;
+    }
+
+    #install-dialog button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: none;
+      border-radius: 50%;
+      background-color: #c5c1c6;
+    }
+
+    #install-dialog #back-button {
+      transform: rotateY(180deg);
+    }
+
+    #install-dialog ul {
+      list-style-type: none;
+      padding: 0;
+      margin-bottom: 2rem;
+    }
+
+    #install-dialog ul li {
+      display: flex;
+      align-items: center;
+      padding: .5rem 0;
+    }
+
+    #install-dialog ul li img {
+      padding-inline: .5rem;
+      width: 24px;
+    }
+
+    #install-dialog .screenshots,
+    #install-dialog .screenshots .scroll-div {
+      width: 100%;
+      overflow: auto;
+      position: relative;
+    }
+
+    #install-dialog .screenshots .scroll-div div {
+      display: flex;
+      gap: 1rem;
+    }
+
+    #install-dialog .screenshots :is(.back, .forward) {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+
+    #install-dialog .screenshots .back {
+      left: 8px;
+      z-index: 1;
+    }
+
+    #install-dialog .screenshots .forward {
+      right: 8px;
+    }
+
+    @media screen and (min-width: 1024px) {
+      #install-dialog .screenshots :is(.back, .forward) {
+        display: none;
+      }
+    }
+
+    #install-dialog .screenshots img {
+      height: 250px;
+    }
+
+    #install-dialog .screenshots img.wide {
+      display: none;
+    }
+
+    @media screen and (min-width: 1024px) {
+
+      #install-dialog,
+      #sensor-dialog,
+      #geolocation-dialog {
+        width: fit-content;
+      }
+
+      #install-dialog .screenshots img.narrow {
+        display: none;
+      }
+
+      #install-dialog .screenshots img.wide {
+        display: block;
+      }
+    }
+
+    #sensor-dialog::backdrop,
+    #geolocation-dialog::backdrop {
+      background-color: #cccccc;
+      opacity: 0.5;
+    }
+
+    #install-dialog::backdrop {
+      background-color: transparent;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) section {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: hidden;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) header {
+      justify-self: flex-start;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #bababa;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) footer {
+      justify-self: flex-end;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      margin-top: 1rem;
+      border-top: 1px solid #cccccc;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) .body {
+      flex: 1 1 auto;
+      height: 0;
+      overflow-y: scroll;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) header h2 {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) picture img {
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .24), 0 -2px 0 #eeeeee;
+    }
+
+    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) picture+p {
+      margin-top: 2.5rem;
+    }
+
+    material-bottom-sheet {
+      display: none;
+      user-select: none;
+      -webkit-user-select: none;
+      --header-background: var(--main-background);
+      --body-background: var(--main-background);
+      --footer-background: var(--main-background);
+    }
+
+    material-dialog {
+      --header-background: var(--main-background);
+      --body-background: var(--main-background);
+      --footer-background: var(--main-background);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      material-dialog {
+        --header-background: var(--base-1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <dialog id="install-dialog">
+    <section>
+      <header>
+        <img src="icons/icon.png">
+        <div class="heading">
+          <span>What PWA Can Do Today</span>
+          <span>A showcase of what is possible with Progressive Web Apps today</span>
+        </div>
+        <div class="close">
+          <button type="button" id="close-install-dialog">
+            <img src="install-icons/close.svg">
+          </button>
+        </div>
+      </header>
+
+      <div class="screenshots">
+        <div class="back">
+          <button type="button" id="back-button">
+            <img src="install-icons/arrow-forward.svg">
+          </button>
+        </div>
+        <div class="scroll-div">
+          <div>
+            <img src="screenshots/image1.jpg" class="narrow">
+            <img src="screenshots/image2.jpg" class="narrow">
+            <img src="screenshots/image3.jpg" class="wide">
+            <img src="screenshots/image4.jpg" class="wide">
+          </div>
+        </div>
+        <div class="forward">
+          <button type="button" id="forward-button">
+            <img src="install-icons/arrow-forward.svg">
+          </button>
+        </div>
+      </div>
+    </section>
+  </dialog>
+
+  <!-- Capture PWA install prompt event -->
+  <!-- <script src="utils.js" type="module"></script>
+  <script src=installsheet.js type="module"></script>
+  <script src="launchapp.js" type="module"></script> -->
+  <script>
+    const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isAndroid = () => /android/i.test(navigator.userAgent);
+    const isMacOS = () => /Macintosh|Mac|Mac OS|MacIntel|MacPPC|Mac68K/gi.test(navigator.userAgent);
+    const isWindows = () => /Win32|Win64|Windows|Windows NT|WinCE/gi.test(navigator.userAgent);
+    const isChromeOS = () => /CrOS/gi.test(navigator.userAgent);
+    const getBrowser = () => {
+      const { userAgent } = navigator;
+
+      return userAgent.match(/edg/i) ? 'edge' :
+        userAgent.match(/chrome|chromium|crios/i) ? 'chrome' :
+          userAgent.match(/firefox|fxios/i) ? 'firefox' :
+            userAgent.match(/safari/i) ? 'safari' :
+              userAgent.match(/opr\//i) ? 'opera' :
+                userAgent.match(/android/i) ? 'android' :
+                  userAgent.match(/iphone/i) ? 'iphone' : 'unknown';
+    }
+
+    const getPlatform = () => {
+      return isIOS() ? 'ios' :
+        isAndroid() ? 'android' :
+          isMacOS() ? 'macos' :
+            isChromeOS() ? 'chromeos' :
+              isWindows() ? 'windows' : 'unknown';
+    }
+    const isTouchScreen = () => {
+      return navigator.maxTouchPoints && navigator.maxTouchPoints > 0 ||
+        window.matchMedia && window.matchMedia("(any-pointer:coarse)").matches;
+    };
+    const isOffline = () => 'onLine' in navigator && !navigator.onLine;
+
+
+    const isChrome = () => getBrowser() === 'chrome';
+    const isFirefox = () => getBrowser() === 'firefox';
+    const isSafari = () => getBrowser() === 'safari';
+    const isOpera = () => getBrowser() === 'opera';
+    const isEdge = () => getBrowser() === 'edge';
+    const isIOSSafari = () => getBrowser() === 'safari' && isIOS();
+    const isIOSChrome = () => getBrowser() === 'chrome' && isIOS();
+    const isAndroidChrome = () => getBrowser() === 'chrome' && isAndroid();
+    const isMacOSChrome = () => getBrowser() === 'chrome' && isMacOS();
+    const isWindowsChrome = () => getBrowser() === 'chrome' && isWindows();
+    const isIOSFirefox = () => getBrowser() === 'firefox' && isIOS();
+    const isAndroidFirefox = () => getBrowser() === 'firefox' && isAndroid();
+    const isIOSEdge = () => getBrowser() === 'edge' && isIOS();
+    const isAndroidEdge = () => getBrowser() === 'edge' && isAndroid();
+    const isMacOSEdge = () => getBrowser() === 'edge' && isMacOS();
+    const isWindowsEdge = () => getBrowser() === 'edge' && isWindows();
+    const isIOSOpera = () => getBrowser() === 'opera' && isIOS();
+    const isAndroidOpera = () => getBrowser() === 'opera' && isAndroid();
+
+    const isInstalled = () => window.matchMedia('(display-mode: standalone)').matches;
+
+    const formatBytes = (bytes, decimals = 2) => {
+      if (bytes == 0) {
+        return '0 Bytes';
+      }
+
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+    }
+
+
+    const templates = {
+      'ios-safari': `
+      <div class="body">
+        <p>
+          To install the app from Safari on iOS:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/ios-share.svg">
+            1. Tap Share
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-home-screen.svg">
+            2. Swipe up and tap Add to Home Screen
+          </li>
+        </ul>
+      </div>
+    `,
+      'ios-chrome': `
+      <div class="body">
+        <p>
+          To install the app from Chrome on iOS:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/ios-share.svg">
+            1. Tap Share in the address bar
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-home-screen.svg">
+            2. Swipe up and tap Add to Home Screen
+          </li>
+        </ul>
+      </div>
+    `,
+      'ios-edge': `
+      <div class="body">
+        <p>
+          To install the app from Edge on iOS:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/menu.svg">
+            1. Tap menu in the bottom-right corner
+          </li>
+          <li>
+            <img src="/src/img/install/ios-share.svg">
+            2. Swipe up and tap Share
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-home-screen.svg">
+            3. Swipe up and tap Add to Home Screen
+          </li>
+        </ul>
+      </div>
+    `,
+      'ios-firefox': `
+      <div class="body">
+        <p>
+          To install the app from Firefox on iOS:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/menu.svg">
+            1. Tap menu in the bottom-right corner
+          </li>
+          <li>
+            <img src="/src/img/install/ios-share.svg">
+            2. Swipe up and tap Share
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-home-screen.svg">
+            3. Swipe up and tap Add to Home Screen
+          </li>
+        </ul>
+      </div>
+    `,
+      'android-edge': `
+      <div class="body">
+        <p>
+          To install the app from Edge on Android:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/menu.svg">
+            1. Tap menu in the bottom-right corner
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-phone.svg">
+            2. Swipe left and tap Add to Phone
+          </li>
+        </ul>
+      </div>
+    `,
+      'android-firefox': `
+      <div class="body">
+        <p>
+          To install the app from Firefox on Android:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/menu-vert.svg">
+            1. Tap menu in the top-right corner
+          </li>
+          <li>
+            <img src="/src/img/install/install-phone.svg">
+            2. Swipe up and tap Install
+          </li>
+        </ul>
+      </div>
+    `,
+      'macos-safari': `
+      <div class="body">
+        <p>
+          To install the app from Safari on MacOS:
+        </p>
+        <ul>
+          <li>
+            <img src="/src/img/install/ios-share.svg">
+            1. Click Share
+          </li>
+          <li>
+            <img src="/src/img/install/add-to-dock.svg">
+            2. Click Add to Dock
+          </li>
+        </ul>
+      </div>
+    `,
+      'macos-firefox': `
+      <div class="body">
+        <p>
+          Currently, PWAs cannot be installed in Firefox. Please choose another browser like Safari, Chrome or Edge.
+        </p>
+      </div>
+    `,
+      'windows-firefox': `
+      <div class="body">
+        <p>
+          Currently, PWAs cannot be installed in Firefox. Please choose another browser like Chrome or Edge.
+        </p>
+      </div>
+    `
+    };
+
+    const getSheetTemplate = () => {
+      const key = `${getPlatform()}-${getBrowser()}`;
+
+      return templates[key];
+    }
+
+
+    const installButton = document.querySelector('#install-button');
+    const installDialog = document.querySelector('#install-dialog');
+    const closeButton = document.querySelector('#close-install-dialog');
+    const backButton = document.querySelector('#back-button');
+    const forwardButton = document.querySelector('#forward-button');
+    const screenShots = document.querySelector('#install-dialog .screenshots');
+    const scrollDiv = screenShots.querySelector('#install-dialog .screenshots .scroll-div');
+    const innerDiv = scrollDiv.querySelector('div');
+    let curPos;
+
+    const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
+
+    let deferredPrompt;
+
+    window.addEventListener("beforeinstallprompt", (e) => {
+      deferredPrompt = e;
+    });
+
+    if (!supportsInstallPrompt) {
+      const template = getInstallSheetTemplate();
+
+      if (!installDialog.querySelector('.body')) {
+        screenShots.insertAdjacentHTML('beforebegin', template);
+      }
+    }
+
+    installDialog.addEventListener('transitionend', (e) => {
+      if (!installDialog.hasAttribute('opened')) {
+        installDialog.close();
+      }
+    });
+
+    closeButton.addEventListener('click', e => {
+      installDialog.removeAttribute('opened');
+    });
+
+    backButton.addEventListener('click', e => {
+      curPos = Math.max(scrollDiv.scrollLeft - 276, 0);
+      scrollDiv.scrollTo({ left: curPos, behavior: 'smooth' });
+    });
+
+    forwardButton.addEventListener('click', e => {
+      curPos = Math.min(scrollDiv.scrollLeft + 276, 552);
+      scrollDiv.scrollTo({ left: curPos, behavior: 'smooth' });
+    });
+
+    function promptInstall() {
+      // deferredPrompt.prompt();
+
+      console.log("prompting install: supportsInstallPrompt: ", supportsInstallPrompt);
+
+      if (deferredPrompt) {
+        console.log("window.deferredPrompt", window.deferredPrompt);
+        //window.deferredPrompt.prompt();
+        deferredPrompt.prompt();
+      }
+      else if (!supportsInstallPrompt) {
+        console.log("on !supportsInstallPrompt");
+        curPos = 0;
+        scrollDiv.scrollLeft = 0;
+        installDialog.showModal();
+        installDialog.querySelector('.body').scrollTop = 0;
+
+        setTimeout(() => {
+          installDialog.setAttribute('opened', '');
+        })
+      } else {
+        console.log("no deferredPrompt");
+      }
+    }
+
+    // Track how PWA was launched (either from browser or as PWA)
+    function getLaunchMode() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      if (deferredPrompt) hasPrompt();
+      if (document.referrer.startsWith('android-app://')) {
+        appLaunchedAsTWA();
+      } else if (navigator.standalone || isStandalone) {
+        appLaunchedAsPWA();
+      } else {
+        window.appLaunchedInBrowser();
+      }
+    }
+
+    // Listen for app install event
+    window.addEventListener('appinstalled', () => {
+      deferredPrompt = null;
+      appInstalled();
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', function (ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+
+
+  </script>
+</body>
+
+</html>
