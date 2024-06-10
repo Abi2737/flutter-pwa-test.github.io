@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "2012349007";
+    const serviceWorkerVersion = "2351253253";
 
 
   </script>
@@ -49,9 +49,7 @@
       box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .24), 0 -2px 0 #eeeeee;
     }
 
-    #install-dialog,
-    #sensor-dialog,
-    #geolocation-dialog {
+    #install-dialog {
       box-sizing: border-box;
       width: 80%;
       height: 80%;
@@ -204,9 +202,7 @@
 
     @media screen and (min-width: 1024px) {
 
-      #install-dialog,
-      #sensor-dialog,
-      #geolocation-dialog {
+      #install-dialog{
         width: fit-content;
       }
 
@@ -219,24 +215,18 @@
       }
     }
 
-    #sensor-dialog::backdrop,
-    #geolocation-dialog::backdrop {
-      background-color: #cccccc;
-      opacity: 0.5;
-    }
-
     #install-dialog::backdrop {
       background-color: transparent;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) section {
+    :is(#install-dialog) section {
       display: flex;
       flex-direction: column;
       height: 100%;
       overflow-y: hidden;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) header {
+    :is(#install-dialog) header {
       justify-self: flex-start;
       min-height: 50px;
       display: flex;
@@ -244,7 +234,7 @@
       border-bottom: 1px solid #bababa;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) footer {
+    :is(#install-dialog) footer {
       justify-self: flex-end;
       height: 50px;
       display: flex;
@@ -253,22 +243,22 @@
       border-top: 1px solid #cccccc;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) .body {
+    :is(#install-dialog) .body {
       flex: 1 1 auto;
       height: 0;
       overflow-y: scroll;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) header h2 {
+    :is(#install-dialog) header h2 {
       margin: 0;
       font-weight: normal;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) picture img {
+    :is(#install-dialog) picture img {
       box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .24), 0 -2px 0 #eeeeee;
     }
 
-    :is(#install-dialog, #sensor-dialog, #geolocation-dialog) picture+p {
+    :is(#install-dialog) picture+p {
       margin-top: 2.5rem;
     }
 
