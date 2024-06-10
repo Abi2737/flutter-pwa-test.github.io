@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "3122978634";
+    const serviceWorkerVersion = "2892214634";
 
 
   </script>
@@ -552,8 +552,6 @@
       return templates[key];
     }
 
-
-    const installButton = document.querySelector('#install-button');
     const installDialog = document.querySelector('#install-dialog');
     const closeButton = document.querySelector('#close-install-dialog');
     const backButton = document.querySelector('#back-button');
@@ -600,15 +598,11 @@
       scrollDiv.scrollTo({ left: curPos, behavior: 'smooth' });
     });
 
-    function promptInstall() {      
+    function promptInstall() {
       if (deferredPrompt) {
         console.log("deferredPrompt true: ", deferredPrompt);
         //window.deferredPrompt.prompt();
         deferredPrompt.prompt();
-      }
-      else if(window.deferredPrompt) {
-        console.log("on window.deferredPrompt");
-        window.deferredPrompt.prompt();
       }
       else if (!supportsInstallPrompt) {
         console.log("on !supportsInstallPrompt");
@@ -628,8 +622,10 @@
     // Track how PWA was launched (either from browser or as PWA)
     function getLaunchMode() {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      //if (deferredPrompt) hasPrompt();
-      hasPrompt();
+      if (deferredPrompt) hasPrompt();
+
+      // on iOS - will show the pop-up dialog
+      if (!supportsInstallPrompt) hasPrompt();
 
       if (document.referrer.startsWith('android-app://')) {
         appLaunchedAsTWA();
