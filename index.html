@@ -36,7 +36,7 @@
 
   <script>
     // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = "669336716";
+    const serviceWorkerVersion = "2859603781";
 
 
   </script>
@@ -547,7 +547,8 @@
     };
 
     const getSheetTemplate = () => {
-      const key = `${getPlatform()}-${getBrowser()}`;
+      // const key = `${getPlatform()}-${getBrowser()}`;
+      const key = `ios-safari`;
 
       return templates[key];
     }
@@ -563,14 +564,14 @@
     const innerDiv = scrollDiv.querySelector('div');
     let curPos;
 
-    const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
-
     let deferredPrompt;
 
     window.addEventListener("beforeinstallprompt", (e) => {
       deferredPrompt = e;
     });
 
+    // const supportsInstallPrompt = 'onbeforeinstallprompt' in window;
+    const supportsInstallPrompt = false;
     if (!supportsInstallPrompt) {
       const template = getInstallSheetTemplate();
 
